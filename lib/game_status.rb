@@ -1,55 +1,166 @@
-# Helper Method
-def position_taken?(board, index)
-  !(board[index].nil? || board[index] == " ")
-end
+require_relative './main.rb'
 
-# Define your WIN_COMBINATIONS constant
-WIN_COMBINATIONS = [
-  [0, 1, 2], #top_row_win
-  [3, 4, 5], #mid_row_win
-  [6, 7, 8], #bot_row_win
-  [0, 3, 6], #lef_col_win
-  [1, 4, 7], #mid_col_win
-  [2, 5, 8], #rig_col_win
-  [0, 4, 8], #ri_diag_win
-  [6, 4, 2]  #le_diag_win
-  ]
+describe "./lib/game_status.rb" do
+  describe 'WIN_COMBINATIONS' do
+    it 'defines a constant WIN_COMBINATIONS with arrays for each win combination' do
+      expect(WIN_COMBINATIONS.size).to eq(8)
 
-  
-def won?(board)
-  empty = board.all?{|cell| cell == " " || cell == nil}
-  
-  draw = board.all?{|i| i == "X" || i == "O"}
-  
-  if empty
-    return false
-    elsif draw
-      return false
-  end
-  
-  WIN_COMBINATIONS.select do |win_combination|
-    win_index_1 = win_combination[0]
-    win_index_2 = win_combination[1]
-    win_index_3 = win_combination[2] 
-    
-    position_1 = board[win_index_1] 
-    position_2 = board[win_index_2] 
-    position_3 = board[win_index_3] 
-    if (position_1 == position_2) && (position_2 == position_3) && (position_3 == position_1)
-        if position_1 == "X" || position_1 == "O"
-          return win_combination
-        else
-          false
-        end
+      expect(WIN_COMBINATIONS).to include_array([0,1,2])
+      expect(WIN_COMBINATIONS).to include_array([3,4,5])
+      expect(WIN_COMBINATIONS).to include_array([6,7,8])
+      expect(WIN_COMBINATIONS).to include_array([0,3,6])
+      expect(WIN_COMBINATIONS).to include_array([1,4,7])
+      expect(WIN_COMBINATIONS).to include_array([2,5,8])
+      expect(WIN_COMBINATIONS).to include_array([0,4,8])
+      expect(WIN_COMBINATIONS).to include_array([6,4,2])
     end
   end
-end
 
+  describe "#won?" do
+    it 'returns false for an empty board' do
+      board = [" ", " ", " ", " ", " ", " ", " ", " ", " "]
 
-def full?(board)
-  board.all?{|i| i == "X" || i == "O"}
-end
+      expect(won?(board)).to be_falsey
+    end
 
-def draw?(board)
-  !!won?(board) && full?(board) ? true : false
+    it 'returns false for a draw' do
+      board = ["X", "O", "X", "O", "X", "X", "O", "X", "O"]
+
+      expect(won?(board)).to be_falsey
+    end
+
+    it 'returns an array of matching indexes for a top row win' do
+      board = ["X", "X", "X", "O", "O", " ", " ", " ", " "]
+
+      expect(won?(board)).to match_array([0,1,2])
+    end
+
+    it 'returns an array of matching indexes for a middle row win' do
+      board = ["O", "O", " ", "X", "X", "X", " ", " ", " "]
+
+      expect(won?(board)).to match_array([3,4,5])
+    end
+
+    it 'returns an array of matching indexes for a bottom row win' do
+      board = [" ", " ", " ", "O", "O", " ", "X", "X", "X"]
+
+      expect(won?(board)).to match_array([6,7,8])
+    end
+
+    it 'returns an array of matching indexes for a left column win' do
+      board = ["O", " ", "X", "O", " ", "X", "O", " ", " "]
+
+      expect(won?(board)).to match_array([0,3,6])
+    end
+
+    it 'returns an array of matching indexes for a middle column win' do
+      board = ["X", "O", " ", "X", "O", " ", " ", "O", " "]
+
+      expect(won?(board)).to match_array([1,4,7])
+    end
+
+    it 'returns an array of matching indexes for a right column win' do
+      board = ["X", " ", "O", "X", " ", "O", " ", " ", "O"]
+
+      expect(won?(board)).to match_array([2,5,8])
+    end
+
+    it 'returns an array of matching indexes for a left diagonal win' do
+      board = ["X", " ", "O", " ", "X", "O", " ", " ", "X"]
+
+      expect(won?(board)).to match_array([0,4,8])
+    end
+
+    it 'returns an array of matching indexes for a right diagonal win' do
+      board = ["X", " ", "O", "X", "O", " ", "O", " ", " "]
+
+      expect(won?(board)).to match_array([2,4,6])
+    end
+  end
+
+  describe '#full?' do
+    it 'returns true for a draw' do
+      board = ["X", "O", "X", "O", "X", "X", "O", "X", "O"]
+
+      expect(full?(board)).to be_truthy
+    end
+
+    it 'returns false for an in-progress game' do
+      board = ["X", " ", "X", " ", "X", " ", "O", "O", " "]
+
+      expect(full?(board)).to be_falsey
+    end
+  end
+
+  describe '#draw?' do
+    it 'returns true for a draw' do
+      board = ["X", "O", "X", "O", "X", "X", "O", "X", "O"]
+
+      expect(draw?(board)).to be_truthy
+    end
+
+    it 'returns false for a game won in the first row' do
+      board = ["X", "X", "X", "O", "X", "O", "O", "O", "X"]
+
+      expect(draw?(board)).to be_falsey
+    end
+
+    it 'returns false for a won game diagonaly' do
+      board = ["X", "O", "X", "O", "X", "O", "O", "O", "X"]
+
+      expect(draw?(board)).to be_falsey
+    end
+
+    it 'returns false for an in-progress game' do
+      board = ["X", " ", "X", " ", "X", " ", "O", "O", "X"]
+
+      expect(draw?(board)).to be_falsey
+    end
+  end
+
+  describe '#over?' do
+    it 'returns true for a draw' do
+      board = ["X", "O", "X", "O", "X", "X", "O", "X", "O"]
+
+      expect(over?(board)).to be_truthy
+    end
+
+    it 'returns true for a won game when the board is full' do
+      board = ["X", "O", "X", "O", "X", "X", "O", "O", "X"]
+
+      expect(over?(board)).to be_truthy
+    end
+
+    it 'returns true for a won game when the board is not full' do
+      board = ["X", " ", " ", "O", "O", "O", "X", "X", " "]
+
+      expect(over?(board)).to be_truthy
+    end
+
+    it 'returns false for an in-progress game' do
+      board = ["X", " ", "X", " ", "X", " ", "O", "O", " "]
+
+      expect(over?(board)).to be_falsey
+    end
+  end
+
+  describe '#winner' do
+    it 'return X when X won' do
+      board = ["X", " ", " ", " ", "X", " ", " ", " ", "X"]
+
+      expect(winner(board)).to eq("X")
+    end
+
+    it 'returns O when O won' do
+      board = ["X", "O", " ", " ", "O", " ", " ", "O", "X"]
+
+      expect(winner(board)).to eq("O")
+    end
+
+    it 'returns nil when no winner' do
+      board = ["X", "O", " ", " ", " ", " ", " ", "O", "X"]
+
+      expect(winner(board)).to be_nil
+    end
+  end
 end
