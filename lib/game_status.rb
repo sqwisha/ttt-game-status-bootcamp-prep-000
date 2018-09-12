@@ -29,7 +29,7 @@ def won?(board)
         if position_1 == "X" || position_1 == "O"
           return win_combination
         else
-          false 
+          false
         end
     end
   end
