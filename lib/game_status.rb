@@ -51,6 +51,6 @@ end
 
 def winner?(board)
   winning_combo = won?(board)
-  winning_combo.detect{|token|
+  winning_combo.detect{|sym| token == "X" || token == "0"}
     
 end
