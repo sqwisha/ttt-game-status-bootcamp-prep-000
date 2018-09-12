@@ -49,7 +49,7 @@ def over?(board)
 end
 
 
-def winner?(board)
+def winner(board)
   winning_combo = won?(board)
   winning_combo.detect{|sym| sym == "X" || sym == "O"}
 end
