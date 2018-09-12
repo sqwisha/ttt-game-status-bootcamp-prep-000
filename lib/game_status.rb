@@ -45,5 +45,5 @@ end
 
 
 def over?(board)
-  !! won?(board) || draw?(board) || ful?l(board) 
+  !! won?(board) || draw?(board) || full?(board) 
 end
