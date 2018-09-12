@@ -47,7 +47,7 @@ end
 
 
 def full?(board)
-  board.any?{|i| position_taken?(board, i)}
+  board.any?{|i| i == "" || i == " ")}
 end
 
 def draw?(board)
