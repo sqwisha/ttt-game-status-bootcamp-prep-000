@@ -51,6 +51,5 @@ end
 
 def winner?(board)
   winning_combo = won?(board)
-  winning_combo.detect{|sym| sym == "X" || sym == "0"}
-    
+  winning_combo.detect{|sym| sym == "X" || sym == "O"}
 end
