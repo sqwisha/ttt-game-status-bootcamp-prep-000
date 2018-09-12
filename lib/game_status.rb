@@ -17,15 +17,6 @@ WIN_COMBINATIONS = [
 
   
 def won?(board)
-  empty = board.all?{|cell| cell == " " || cell == nil}
-  
-  draw = board.all?{|i| i == "X" || i == "O"}
-  
-  if empty
-    return false
-    elsif draw
-      return false
-  end
   
   WIN_COMBINATIONS.select do |win_combination|
     win_index_1 = win_combination[0]
