@@ -39,7 +39,7 @@ def won?(board)
       if (position_1 == position_2) && (position_2 == position_3) && (position_3 == position_1)
         return win_combination
       else
-        return false
+        return nil
       end
     end
   end
