@@ -50,7 +50,7 @@ end
 
 
 def winner(board)
-  won?(board) ? token = [] : false
+  won?(board) ? token = [] : nil
   winning_combo = won?(board)
   winning_combo.each{|i| token.push(board[i])}
   return token.detect{|i| i == "X" || i == "O"}
