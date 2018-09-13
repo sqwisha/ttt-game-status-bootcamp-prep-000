@@ -52,5 +52,6 @@ end
 def winner(board)
   token = []
   winning_combo = won?(board)
-  winning_combo.find{|sym| sym == "X" || sym == "O"}
+  winning_combo.each{|i| token.push(board[i])}
+  token.detect{|i| i == "X" || i == "O"}
 end
